@@ -1,4 +1,4 @@
-# InsightForge — Customer Sentiment & Churn Dashboard
+# Customer Sentiment & Churn Dashboard
 
 A serverless, AI-powered dashboard for analyzing customer feedback. Upload CSVs of customer reviews, process them through **Amazon Comprehend** for sentiment analysis and key phrase extraction, and visualize churn risk in a sleek dark-mode dashboard.
 
