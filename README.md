@@ -43,6 +43,23 @@ risk-analysis-pipeline/
 
 ![Application Architecture](architecture.png)
 
+## Pipeline Explained
+
+### Uploads & Processing
+
+- Browser calls `GET /api/upload-url?filename=x.csv` and gets back a presigned PUT URL from S3 that expires after 5 minutes. The S3 key is `uploads/{filename}`. Browser then PUTs the file straight to S3.
+- S3 ObjectCreated event fires filtered to the .csv suffix, triggering lambda function `processCSV`.
+- Two separate Amazon Comprehend calls are made per data row: detect_key_phrases and detect_sentiment.
+- Churn risk is then evaluated based on the `Negative` scores in the sentiment response from Comprehend. >= 0.6 is HIGH, >= 0.3 is MEDIUM and anything else is LOW.
+- An entry with relevant fields is written to DynamoDB.
+
+### Storage & Reads
+
+- DynamoDB uses `reviewId` as its partition key.
+- It has a Global Secondary Index (GSI) called `SentimentIndex` (partition key `sentiment`, sort key `reviewId`) so that the reviews endpoint can filter by sentiment.
+- `getMetrics` does a paginated scan and calculates the counts and averages in Python on each request.
+- `getReviews` uses GSI `Query` when a sentiment filter is passed, otherwise it does a `Scan(limit=50)`. Either way, the results get sorted by `negativeScore`.
+
 ---
 
 ## Prerequisites
