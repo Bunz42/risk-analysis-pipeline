@@ -24,6 +24,9 @@ TABLE_NAME = os.environ.get("DYNAMODB_TABLE", "SentimentResults-dev")
 def handler(event, context):
     """Handle S3 ObjectCreated events for CSV files."""
     table = dynamodb.Table(TABLE_NAME)
+    
+    processed = 0
+    errors = 0
 
     for record in event["Records"]:
         bucket = record["s3"]["bucket"]["name"]
@@ -35,9 +38,6 @@ def handler(event, context):
         response = s3.get_object(Bucket=bucket, Key=key)
         body = response["Body"].read().decode("utf-8")
         reader = csv.DictReader(io.StringIO(body))
-
-        processed = 0
-        errors = 0
 
         for row in reader:
             try:

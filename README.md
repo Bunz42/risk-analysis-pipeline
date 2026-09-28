@@ -1,24 +1,47 @@
-# InsightForge — Customer Sentiment & Churn Dashboard
+# Risk Analysis Pipeline — Customer Sentiment & Churn Dashboard
 
 A serverless, AI-powered dashboard for analyzing customer feedback. Upload CSVs of customer reviews, process them through **Amazon Comprehend** for sentiment analysis and key phrase extraction, and visualize churn risk in a sleek dark-mode dashboard.
 
 ---
 
-## Architecture
+## Project Structure
 
 ```
-┌──────────────┐    CSV     ┌────────┐   S3 Event   ┌─────────────────┐
-│   Next.js    │ ────────── │   S3   │ ───────────── │ Lambda:         │
-│   Frontend   │  presigned │ Bucket │               │ processCSV      │
-└──────┬───────┘    URL     └────────┘               │  ↓ Comprehend   │
-       │                                             │  ↓ DynamoDB     │
-       │  GET /api/metrics                           └─────────────────┘
-       │  GET /api/reviews     ┌─────────────────┐
-       └────────────────────── │ Lambda:          │
-           API Gateway         │ apiHandler       │
-                               │  ↓ DynamoDB Scan │
-                               └─────────────────┘
+risk-analysis-pipeline/
+├── backend/
+│   ├── serverless.yml          # AWS Serverless Framework config
+│   ├── handlers/
+│   │   ├── process_csv.py      # S3-triggered NLP processor
+│   │   └── api_handler.py      # API Gateway endpoints
+│   ├── requirements.txt
+│   └── sample_data.csv
+├── frontend/
+│   ├── src/
+│   │   ├── app/
+│   │   │   ├── globals.css     # Dark-mode design system
+│   │   │   ├── layout.tsx      # Root layout + SEO
+│   │   │   └── page.tsx        # Dashboard page
+│   │   ├── components/
+│   │   │   ├── MetricCard.tsx
+│   │   │   ├── SentimentPieChart.tsx
+│   │   │   ├── SentimentBarChart.tsx
+│   │   │   ├── ChurnRiskChart.tsx
+│   │   │   ├── ReviewTable.tsx
+│   │   │   ├── FileUpload.tsx
+│   │   │   └── Sidebar.tsx
+│   │   └── lib/
+│   │       ├── api.ts          # API fetch + mock fallback
+│   │       ├── types.ts        # TS interface definitions
+│   │       └── mockData.ts     # Development mock data (for testing)
+│   └── package.json
+└── README.md
 ```
+
+---
+
+## Architecture
+
+![Application Architecture](architecture.png)
 
 ---
 
@@ -126,41 +149,6 @@ The processor expects CSV files with these columns:
 | `date`          | Optional | Date string (defaults to now)      |
 
 Alternative column names accepted: `text`, `feedback`, `name`, `id`.
-
----
-
-## Project Structure
-
-```
-insight-forge/
-├── backend/
-│   ├── serverless.yml          # IaC — all AWS resources
-│   ├── handlers/
-│   │   ├── process_csv.py      # S3-triggered NLP processor
-│   │   └── api_handler.py      # API Gateway endpoints
-│   ├── requirements.txt
-│   └── sample_data.csv
-├── frontend/
-│   ├── src/
-│   │   ├── app/
-│   │   │   ├── globals.css     # Dark-mode design system
-│   │   │   ├── layout.tsx      # Root layout + SEO
-│   │   │   └── page.tsx        # Dashboard page
-│   │   ├── components/
-│   │   │   ├── MetricCard.tsx
-│   │   │   ├── SentimentPieChart.tsx
-│   │   │   ├── SentimentBarChart.tsx
-│   │   │   ├── ChurnRiskChart.tsx
-│   │   │   ├── ReviewTable.tsx
-│   │   │   ├── FileUpload.tsx
-│   │   │   └── Sidebar.tsx
-│   │   └── lib/
-│   │       ├── api.ts          # API fetch + mock fallback
-│   │       ├── types.ts        # TypeScript interfaces
-│   │       └── mockData.ts     # Development mock data
-│   └── package.json
-└── README.md
-```
 
 ---
 

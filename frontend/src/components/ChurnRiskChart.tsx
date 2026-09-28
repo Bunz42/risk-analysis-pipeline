@@ -74,6 +74,7 @@ export default function ChurnRiskChart({ data }: ChurnRiskChartProps) {
                                 fontSize: "12px",
                                 padding: "8px 12px",
                             }}
+                            itemStyle={{ color: "#ededed" }}
                             // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             formatter={(value: any) => [value, "Customers"]}
                             cursor={{ fill: "rgba(255,255,255,0.02)" }}
