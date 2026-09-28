@@ -33,7 +33,7 @@ export default function Sidebar() {
             >
                 {!collapsed && (
                     <span className="text-sm font-semibold tracking-tight" style={{ color: "var(--color-text-primary)" }}>
-                        Insight<span style={{ color: "var(--color-accent-red)" }}>Forge</span>
+                        Risk<span style={{ color: "var(--color-accent-red)" }}>Analytics</span>
                     </span>
                 )}
                 <button
