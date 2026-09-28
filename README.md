@@ -176,9 +176,3 @@ Alternative column names accepted: `text`, `feedback`, `name`, `id`.
 | `NEXT_PUBLIC_API_URL`  | `frontend/.env.local` | API Gateway base URL           |
 | `DYNAMODB_TABLE`       | Lambda env    | Set automatically by serverless.yml   |
 | `S3_BUCKET`            | Lambda env    | Set automatically by serverless.yml   |
-
----
-
-## License
-
-MIT
